@@ -15,6 +15,12 @@ class Test(TestCase):
         ans=5
         ond_ans=algo.ond_algo(A,B)
         self.assertEqual(ond_ans,ans,'ond_ans is %d but ans is '%ond_ans+str(ans))
+    def test_my_ond_algo(self):
+        A = 'ABCABBA'
+        B = 'CBABAC'
+        ans = 5
+        ond_ans = algo.my_ond_algo(A, B)
+        self.assertEqual(ond_ans, ans, 'ond_ans is %d but ans is ' % ond_ans + str(ans))
     def test_ond_and_dp_algo(self):
         testcase=[('horse','rose'),('intension','execution')]
         for i in testcase:

@@ -31,10 +31,10 @@ class Fastafile(myclass.File_object):
         except Exception:
             traceback.print_exc()
             return False
-    def delete_linebreak(self,overwriteflag:bool=False):
+    def delete_linebreak(self,outpath:str):
         filename = os.path.basename(self.path)
         tmp_filename=filename+'.delblank'
-        tmp_filepath=os.path.join(os.path.dirname(self.path), tmp_filename)
+        tmp_filepath=os.path.join(outpath, tmp_filename)
         with open(self.path,mode='r') as sourcefasta,open(tmp_filepath,mode='w') as newfile:
             newfile.write(sourcefasta.readline())
             for line in sourcefasta:
@@ -42,9 +42,6 @@ class Fastafile(myclass.File_object):
                     newfile.write('\n'+line)
                 else:
                     newfile.write(line[:-1])
-            if overwriteflag:
-                os.remove(self.path)
-                os.rename(tmp_filepath,filename)
         return tmp_filepath
 
     def delete_blank_scaffold(self,overwriteflag:bool=False):
@@ -75,7 +72,7 @@ class Fastafile(myclass.File_object):
 class Fasta_unit:
     def __init__(self,info='') -> None:
         tmp=info.split('\n')
-        self.id=tmp[0][1:]
+        self.id=tmp[0].split()[0][1:]
         self.base=tmp[1]
 
     def getslice(self,start:int,end:int,zero_based:bool=True)->str:

@@ -52,6 +52,31 @@ def ond_algo(A:str,B:str)->int:
             if x>=n and y>=m:
                 return d
 
+def my_ond_algo(A:str,B:str)->int:
+    n=len(A)
+    m=len(B)
+    max_value=m+n
+    v=[]
+    x,y=0,0
+    while x < n and y < m and A[x] == B[y]:
+        x, y = x + 1, y + 1
+    v.append([x])
+    for d in range(1,max_value):
+        tmp_v=[-1]*(2*d+1)
+        for k in range(-d,d+2,2):
+            if k==-d or k!=d and v[d-1][k+d]<v[d-1][k+d+2]:
+                x=v[d-1][k+d]#竖着走
+            else:
+                x=v[d-1][k+d+2]+1#横着走
+            y=x-k
+            while x<n and y<m and A[x]==B[y]:
+                x,y=x+1,y+1
+            tmp_v[k+d]=x
+            if x>=n and y>=m:
+                print(v)
+                return d
+        v.append(tmp_v)
+
 def main(argv):
     queryfile = myclass.Fastafile('test_data/query')
     reffile = myclass.Fastafile('test_data/ref')
