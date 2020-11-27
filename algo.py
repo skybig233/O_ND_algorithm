@@ -4,7 +4,8 @@
 # @File : algo.py
 # @Software: PyCharm
 import sys
-
+import myclass
+import time
 def dp_algo(word1:str,word2:str)->int:
     n = len(word1)
     m = len(word2)
@@ -52,6 +53,19 @@ def ond_algo(A:str,B:str)->int:
                 return d
 
 def main(argv):
-    pass
+    queryfile = myclass.Fastafile('test_data/query')
+    reffile = myclass.Fastafile('test_data/ref')
+    cnt=0
+    for i, j in zip(queryfile, reffile):
+        if cnt>1:
+            break
+        cnt+=1
+        start=time.time()
+        ond_ans = ond_algo(i.base, j.base)
+        ond_end=time.time()
+        dp_ans = dp_algo(i.base, j.base)
+        dp_end=time.time()
+        print('ond excute',ond_end-start,'s with ans',str(ond_ans))
+        print('dp excute',dp_end - ond_end,'s with ans', str(dp_ans))
 if __name__ == '__main__':
     main(sys.argv)

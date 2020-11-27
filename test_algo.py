@@ -22,9 +22,8 @@ class Test(TestCase):
             dp_ans=algo.dp_algo(i[0],i[1])
             self.assertEqual(ond_ans,dp_ans,'wops')
     def test(self):
-        queryfile=myclass.Fastafile('/nascngb/gccnt/wangou/assemblerdev/guolidong/trioSLR/Paper_stage2/HLC_KIR/test_01/f10k.fa')
-        reffile=myclass.Fastafile('/nascngb/gccnt/wangou/assemblerdev/guolidong/trioSLR/Paper_stage2/HLC_KIR/test_01/l10k.fa')
-        for i in queryfile:
-            A=i.base
-        for j in reffile:
-            B=j.base
+        queryfile=myclass.Fastafile('/test_data/query')
+        reffile=myclass.Fastafile('/test_data/ref')
+        for i,j in zip(queryfile,reffile):
+            ond_ans=algo.ond_algo(i.base,j.base)
+            dp_ans=algo.dp_algo(i.base,j.base)
