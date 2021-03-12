@@ -25,15 +25,10 @@ class Test(TestCase):
         print(script)#[(0, 'S0'), (2, 'D'), (5, 'D'), (7, 'I5')]
         self.assertEqual(ond_ans, ans, 'ond_ans is %d but ans is ' % ond_ans + str(ans))
     def test_ond_and_dp_algo(self):
-        testcase=[('horse','rose'),('intension','execution')]
+        testcase=[('',''),('horse','ros'),('intention','execution')]
         for i in testcase:
             ond_v=algo.my_ond_algo_version1(i[0],i[1])
+            ond_ans=algo.get_edit_distance(ond_v)
             dp_ans=algo.dp_algo(i[0],i[1])
-            print(algo.get_edit_script(ond_v))
-            self.assertEqual(algo.get_edit_distance(ond_v),dp_ans,'wops')
-    def test(self):
-        queryfile=myclass.Fastafile('/test_data/query')
-        reffile=myclass.Fastafile('/test_data/ref')
-        for i,j in zip(queryfile,reffile):
-            ond_ans=algo.ond_algo(i.base,j.base)
-            dp_ans=algo.dp_algo(i.base,j.base)
+            print(ond_ans)
+            self.assertEqual(ond_ans,dp_ans,'wops')

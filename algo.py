@@ -8,6 +8,12 @@ import myclass
 import time
 
 def dp_algo(word1:str,word2:str)->int:
+    """
+    这是从leetcode官方题解上摘录下来的解法
+    :param word1:
+    :param word2:
+    :return: 直接给出D值
+    """
     n = len(word1)
     m = len(word2)
     # 有一个字符串为空串
@@ -32,6 +38,12 @@ def dp_algo(word1:str,word2:str)->int:
     return D[n][m]
 
 def ond_algo(A:str,B:str)->int:
+    """
+    这是根据论文的伪代码描述写的，Insert Delete权值为1、Sub权值为2
+    :param A:
+    :param B:
+    :return: 直接给出D值
+    """
     n=len(A)
     m=len(B)
     max_value=m+n
@@ -97,6 +109,12 @@ def list_get(index:int, list:[], default=None):
     return list[index] if 0<= index < len(list) else default
 
 def my_ond_algo_version1(A:str, B:str)->[[]]:
+    """
+    改进后的OND算法，IDS权值都为1，并且返回一个v数组，后续根据v数组计算D值和路径（编辑脚本）
+    :param A:
+    :param B:
+    :return:v数组
+    """
     n=len(A)
     m=len(B)
     max_value=m+n
@@ -105,6 +123,9 @@ def my_ond_algo_version1(A:str, B:str)->[[]]:
     while x < n and y < m and A[x] == B[y]:
         x, y = x + 1, y + 1
     v.append([x])
+    # 边界值处理。。。。例如('aaaa','aaaa')、('','')
+    if x>=n and y>=m:
+        return v
     for d in range(1,max_value):
         tmp_v=[-1]*(2*d+1)
         for k in range(-d,d+1,1):
@@ -151,19 +172,17 @@ def get_edit_script(v:[[]])->[]:
     return script
 
 def main(argv):
+    CASE_NUM=3
     queryfile = myclass.Fastafile('test_data/query')
     reffile = myclass.Fastafile('test_data/ref')
-    cnt=0
-    for i, j in zip(queryfile, reffile):
-        if cnt>1:
-            break
-        cnt+=1
-        start=time.time()
-        ond_ans = ond_algo(i.base, j.base)
-        ond_end=time.time()
-        dp_ans = dp_algo(i.base, j.base)
-        dp_end=time.time()
-        print('ond excute',ond_end-start,'s with ans',str(ond_ans))
-        print('dp excute',dp_end - ond_end,'s with ans', str(dp_ans))
+    case=list(zip(queryfile,reffile))
+    i,j=case[CASE_NUM][0],case[CASE_NUM][1]
+    start=time.time()
+    ond_ans = get_edit_distance(my_ond_algo_version1(i.base, j.base))
+    ond_end=time.time()
+    print('ond excute',ond_end-start,'s with ans',str(ond_ans))
+    dp_ans = dp_algo(i.base, j.base)
+    dp_end=time.time()
+    print('dp excute',dp_end - ond_end,'s with ans', str(dp_ans))
 if __name__ == '__main__':
     main(sys.argv)
