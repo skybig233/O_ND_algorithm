@@ -71,10 +71,16 @@ class Point:
         self.k=k
         self.y=x-k
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return '(%s,%s)' % (self.x,self.y)
 
 def my_ond_algo_version0(A:str, B:str)->[[]]:
+    """
+    point替换，更方便理解（V数组存的是点，为了节省空间，论文里面只存了X坐标）
+    :param A:
+    :param B:
+    :return:
+    """
     n=len(A)
     m=len(B)
     max_value=m+n
@@ -123,20 +129,33 @@ def my_ond_algo_version1(A:str, B:str)->[[]]:
     while x < n and y < m and A[x] == B[y]:
         x, y = x + 1, y + 1
     v.append([x])
+
     # 边界值处理。。。。例如('aaaa','aaaa')、('','')
     if x>=n and y>=m:
         return v
+
     for d in range(1,max_value):
+        #每轮迭代初始化这一轮的v数组，v数组中存的是x横坐标，-1表示不可达
         tmp_v=[-1]*(2*d+1)
+
         for k in range(-d,d+1,1):
             x1=list_get(list=v[d-1],index=k+d-2,default=-1)
             x2=list_get(list=v[d-1],index=k+d-1,default=-1)
             x3=list_get(list=v[d-1],index=k+d,default=-1)
+            if x1==-1 and x2==-1 and x3==-1:
+                # 三个方向都不可达，则该点不可达
+                continue
             p1 = Point(x=x1, k=k-1)#横着走的点
             p2= Point(x=x2,k=k)#substitution
             p3 = Point(x=x3, k=k+1)#竖着走的点
+
             x=max([p1.x+1,p2.x+1,p3.x])
             y=x-k
+
+            #如果IDS导致越界直接
+            if x>n or y>m:
+                continue
+
             while x<n and y<m and A[x]==B[y]:
                 x,y=x+1,y+1
             tmp_v[k+d]=x
@@ -150,9 +169,21 @@ def get_edit_distance(v:[[]]):
     return len(v)-1
 
 def get_edit_script(v:[[]])->[]:
+    """
+    之所以把这部分单独出来是因为
+    可能有多种编辑脚本对应相同的D值，即在给定权值下，有多个最短路径，
+    而v数组保留了全部信息，可以将这些路径全部输出，这里暂且只输出一条最短路径
+    :param v:
+    :return:
+    """
     script=[]
     d=len(v)-1
-    k=v[-1].index(-1)-d-1 if -1 in v[-1] else d
+    #从后往前数第一个非-1的值，就是终点，求其k值（index要转换，例如0,1,2,3,4要转换成-2,-1,0,1,2）
+    for i in range(len(v[-1])-1,-1,-1):
+        if v[-1][i]!=-1:
+            k = i-len(v[-1])//2
+            break
+
     for d in range(len(v)-1,0,-1):
         x1 = list_get(list=v[d - 1], index=k + d - 2, default=-1)
         x2 = list_get(list=v[d - 1], index=k + d - 1, default=-1)
